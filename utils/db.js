@@ -1,40 +1,23 @@
-import { MongoClient } from 'mongodb';
-
-const host = process.env.DB_HOST || 'localhost';
-const port = process.env.DB_PORT || 27017;
-const database = process.env.DB_DATABASE || 'files_manager';
-const url = `mongodb://${host}:${port}/`;
+// utils/db.js
+const { MongoClient } = require('mongodb');
+const uri = process.env.MONGO_URI; // Make sure to set this in your environment variables
+const client = new MongoClient(uri, { useUnifiedTopology: true });
 
 class DBClient {
-  constructor() {
-    this.db = null;
-    MongoClient.connect(url, { useUnifiedTopology: true }, (error, client) => {
-      if (error) console.log(error);
-      this.db = client.db(database);
-      this.db.createCollection('users');
-      this.db.createCollection('files');
-    });
-  }
-
-  isAlive() {
-    return !!this.db;
+  async isAlive() {
+    if (!client.isConnected()) {
+      await client.connect();
+    }
+    return client.isConnected();
   }
 
   async nbUsers() {
-    return this.db.collection('users').countDocuments();
-  }
-
-  async getUser(query) {
-    console.log('QUERY IN DB.JS', query);
-    const user = await this.db.collection('users').findOne(query);
-    console.log('GET USER IN DB.JS', user);
-    return user;
+    return client.db().collection('users').countDocuments();
   }
 
   async nbFiles() {
-    return this.db.collection('files').countDocuments();
+    return client.db().collection('files').countDocuments();
   }
 }
 
-const dbClient = new DBClient();
-export default dbClient;
+module.exports = new DBClient();
