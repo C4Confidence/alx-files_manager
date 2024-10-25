@@ -45,6 +45,11 @@ class DBClient {
       return 0;
     }
   }
+
+  // New method to get the users collection
+  usersCollection() {
+    return this.client.db(this.database).collection('users');
+  }
 }
 
 // Create and export an instance of DBClient

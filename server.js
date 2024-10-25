@@ -1,14 +1,12 @@
-// server.js
 const express = require('express');
 const routes = require('./routes/index');
-const { PORT = 5000 } = process.env;
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-// Load all routes
-app.use('/', routes);
+app.use(express.json()); // Middleware to parse JSON request bodies
+app.use('/', routes); // Mount the router on the root path
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
