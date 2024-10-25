@@ -14,5 +14,7 @@ router.get('/connect', AuthController.getConnect);
 router.get('/disconnect', AuthController.getDisconnect);
 router.get('/users/me', UsersController.getMe);
 router.post('/files', FilesController.postUpload);  // New endpoint for file upload
+router.get('/files/:id', FilesController.getShow);   // New endpoint for retrieving a file by ID
+router.get('/files', FilesController.getIndex);       // New endpoint for retrieving files with pagination
 
 module.exports = router;
